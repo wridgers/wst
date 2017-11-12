@@ -1,7 +1,9 @@
 [package]
 name = "wst"
 description = "a tool for working with websockets"
-version = "0.1.0"
+repository = "https://github.com/wridgers/wst"
+readme = "README.md"
+version = "0.1.1"
 authors = ["Will Ridgers <will@mindfuzz.net>"]
 license = "MIT"
 
