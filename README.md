@@ -2,6 +2,8 @@
 
 A utility for working with websockets.
 
+[![Crates.io](https://img.shields.io/crates/v/wst.svg)](https://crates.io/crates/wst) [![license](https://img.shields.io/github/license/wridgers/wst.svg)]()
+
 ## Install
 
     cargo install wst
