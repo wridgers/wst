@@ -1,0 +1,9 @@
+[package]
+name = "wst"
+description = "a tool for working with websockets"
+version = "0.1.0"
+authors = ["Will Ridgers <will@mindfuzz.net>"]
+license = "MIT"
+
+[dependencies]
+ws = "0.7.3"
