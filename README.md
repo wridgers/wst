@@ -21,7 +21,7 @@ A utility for working with websockets.
 
 As a **server** `wst` will transmit lines received on stdin to connected clients.
 
-    ( while :; do echo `date` && sleep 1; done) | wst server localhost 1234
+    ( while :; do date && sleep 1; done) | wst server localhost 1234
 
 As a **client** `wst` will print received messages as a line to stdout. The `client` mode argument is optional.
 
