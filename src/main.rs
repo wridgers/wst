@@ -1,25 +1,18 @@
 extern crate ws;
 
+mod client;
+mod server;
+
 use std::env;
 use std::io::BufRead;
 use std::io;
 use std::process::exit;
 use std::thread;
 
-use ws::{connect, Handler, Handshake, Message, Result, WebSocket};
+use ws::{connect, WebSocket};
 
-struct Client {}
-
-impl Handler for Client {
-    fn on_open(&mut self, _: Handshake) -> Result<()> {
-        Ok(())
-    }
-
-    fn on_message(&mut self, msg: Message) -> Result<()> {
-        println!("{}", msg);
-        Ok(())
-    }
-}
+use client::{Client};
+use server::{Server};
 
 fn usage_general() {
     println!("Usage: wst MODE
@@ -51,7 +44,7 @@ fn main() {
             }
 
             let listen = format!("{}:{}", &args[2], &args[3]);
-            let server = WebSocket::new(|_| { move |_| { Ok(()) }}).unwrap();
+            let server = WebSocket::new(|conn| { Server { conn: conn } } ).unwrap();
             let broadcaster = server.broadcaster();
 
             let input = thread::spawn(move || {
