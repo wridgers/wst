@@ -14,12 +14,17 @@ use ws::{connect, WebSocket};
 use client::{Client};
 use server::{Server};
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 fn usage_general() {
-    println!("Usage: wst MODE
+    println!("Version: {}
+Usage: wst MODE [arguments]
 
 Modes:
   server HOST PORT  - a server that broadcasts stdin to connected clients
-  client URL        - a client that prints messages to stdout (default)");
+  client URL        - a client that prints messages to stdout (default)
+  version           - show version
+  help              - show help", VERSION);
 }
 
 fn main() {
@@ -36,6 +41,10 @@ fn main() {
         "help" => {
             usage_general();
         },
+
+        "version" => {
+            println!("{}", VERSION)
+        }
 
         "server" => {
             if args.len() < 4 {
