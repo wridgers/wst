@@ -1,5 +1,6 @@
 extern crate ws;
 
+mod buffer;
 mod client;
 mod server;
 
@@ -7,10 +8,12 @@ use std::env;
 use std::io::BufRead;
 use std::io;
 use std::process::exit;
+use std::sync::{Arc, Mutex};
 use std::thread;
 
 use ws::{connect, WebSocket};
 
+use buffer::{Buffer};
 use client::{Client};
 use server::{Server};
 
@@ -52,19 +55,32 @@ fn main() {
                 exit(0);
             }
 
+            let buffer = Arc::new(Mutex::new(Buffer::new(1, 10)));
+
             let listen = format!("{}:{}", &args[2], &args[3]);
-            let server = WebSocket::new(|conn| { Server { conn: conn } } ).unwrap();
+            let server = WebSocket::new(|conn| {
+                let buffer_clone = buffer.clone();
+
+                Server {
+                    conn: conn,
+                    buffer: buffer_clone,
+                }
+            } ).unwrap();
+
             let broadcaster = server.broadcaster();
 
+            let buffer_clone = buffer.clone();
             let input = thread::spawn(move || {
                 let stdin = io::stdin();
 
                 for line in stdin.lock().lines() {
-                    // FIXME: don't copy here. use read_line instead.
-                    let r_line = line.unwrap();
+                    let line = line.unwrap();
 
-                    println!("{}", r_line);
-                    broadcaster.send(r_line).unwrap();
+                    let mut shared = buffer_clone.lock().unwrap();
+                    shared.add_line(line.clone());
+
+                    println!("{}", line);
+                    broadcaster.send(line).unwrap();
                 }
             });
 

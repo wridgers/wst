@@ -1,9 +1,13 @@
 extern crate ws;
 
+use std::sync::{Arc, Mutex};
+use buffer::{Buffer};
+
 use ws::{Handler, Sender, Message, Result, CloseCode, Handshake, Error};
 
 pub struct Server {
     pub conn: Sender,
+    pub buffer: Arc<Mutex<Buffer>>,
 }
 
 impl Handler for Server {
@@ -12,6 +16,13 @@ impl Handler for Server {
             eprintln!("Client connected from {}", ip);
         } else {
             eprintln!("Client connected from unknown IP");
+        }
+
+        let mut shared = self.buffer.lock().unwrap();
+
+        for line in shared.get_buffer() {
+            let message = Message::Text(line.clone());
+            self.conn.send(message).unwrap()
         }
 
         Ok(())
