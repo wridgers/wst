@@ -9,3 +9,4 @@ license = "MIT"
 
 [dependencies]
 ws = "0.7.3"
+getopts = "0.2.15"
