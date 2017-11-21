@@ -130,6 +130,7 @@ fn main() {
                 Server {
                     conn: conn,
                     buffer: buffer_clone,
+                    ping_timeout: None,
                 }
             } ).unwrap();
 
